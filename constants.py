@@ -64,7 +64,7 @@ class ResponsiveBuilder extends StatelessWidget {
     hScreenTypeLayoutContent = '''import 'package:flutter/material.dart';
 import 'package:resp/responsive/responsive_builder.dart';
 
-import '../common/enums.dart';
+import '../common/enums/enums.dart';
 
 class ScreenTypeLayout extends StatelessWidget {
   final Widget mobile;
@@ -96,12 +96,11 @@ class ScreenTypeLayout extends StatelessWidget {
     );
   }
 }
-
 '''
 
     hSizingInfoContent = '''import 'package:flutter/material.dart';
 
-import '../common/enums.dart';
+import '../common/enums/enums.dart';
 
 class SizingInformation {
   final DeviceScreenType? deviceScreenType;
@@ -119,7 +118,6 @@ class SizingInformation {
     return "DeviceScreenType: $deviceScreenType, ScreenSize: $screenSize, LocalWidgetSize: $localWidgetSize";
   }
 }
-
 '''
 
     hResponsiveHomeContent = '''import 'package:flutter/material.dart';

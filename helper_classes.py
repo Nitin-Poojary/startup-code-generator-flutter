@@ -34,18 +34,31 @@ class hFolderStructure:
         self.dLayouts = 'layouts'
         self.dOrientation = 'orientation'
 
-    def folderStructureForRiverpod(self):
+    def folderStructureForRiverpod(self, features):
         pFeatures = f'{self.dParent}\{self.dFeatures}'
         pHome = f'{pFeatures}\{self.dHome}'
         pController = f'{pHome}\{self.dController}'
         pRepository = f'{pHome}\{self.dRepository}'
         pView = f'{pHome}\{self.dViews}'
 
-        foldersToCreate = [pFeatures, pHome, pController, pRepository, pView]
+        foldersToCreate = [pFeatures]
+
+        if (len(features) > 0):
+            for feature in features:
+                pFeature = f'{pFeatures}\{feature}'
+                controller = f'{pFeature}\{self.dController}'
+                repository = f'{pFeature}\{self.dRepository}'
+                view = f'{pFeature}\{self.dViews}'
+
+                foldersToCreate.extend(
+                    [pFeature, controller, repository, view])
+
+        foldersToCreate.extend(
+            [pHome, pController, pRepository, pView])
 
         hf.createFolders(foldersToCreate)
 
-    def filesForRiverpod(self):
+    def filesForRiverpod(self, features):
         hConst = c.Contants()
 
         mainFile = 'main.dart'
@@ -66,9 +79,27 @@ class hFolderStructure:
             pHomeRepoFile: hConst.hRepoContent
         }
 
+        if (len(features)) > 0:
+            for feature in features:
+                pFeatureView = f'{self.dParent}\{self.dFeatures}\{feature}\{self.dViews}\{feature}_view.dart'
+                pFeatureController = f'{self.dParent}\{self.dFeatures}\{feature}\{self.dController}\{feature}_controller.dart'
+                pFeatureRepository = f'{self.dParent}\{self.dFeatures}\{feature}\{self.dRepository}\{feature}_repository.dart'
+
+                pFeatureViewContent = hConst.hHomeViewContent.replace(
+                    'HomeView', f'{feature.capitalize()}View')
+                pFeatureControllerContent = hConst.hControllerContent.replace(
+                    'HomeController', f'{feature.capitalize()}Controller')
+                pFeatureRepositoryContent = hConst.hRepoContent.replace(
+                    'HomeRepository', f'{feature.capitalize()}Repository')
+
+                featureUpdate = {pFeatureView: pFeatureViewContent, pFeatureController:
+                                 pFeatureControllerContent, pFeatureRepository: pFeatureRepositoryContent}
+
+                filesToCreate.update(featureUpdate)
+
         hf.createFiles(filesToCreate)
 
-    def folderStructureForResponsive(self):
+    def folderStructureForResponsive(self, features):
 
         pResponsive = f'{self.dParent}\{self.dResponsive}'
         pCommon = f'{self.dParent}\{self.dCommon}'
@@ -76,11 +107,17 @@ class hFolderStructure:
         pUtils = f'{pCommon}\{self.dUtils}'
         pLayouts = f'{self.dParent}\{self.dFeatures}\{self.dHome}\{self.dViews}\{self.dLayouts}'
 
-        folderToCreate = [pResponsive, pCommon, pEnums, pUtils, pLayouts]
+        foldersToCreate = [pResponsive, pCommon, pEnums, pUtils, pLayouts]
 
-        hf.createFolders(folderToCreate)
+        if (len(features) > 0):
+            for feature in features:
+                pFeatureLayout = f'{self.dParent}\{self.dFeatures}\{feature}\{self.dViews}\{self.dLayouts}'
 
-    def filesForResponsive(self):
+                foldersToCreate.append(pFeatureLayout)
+
+        hf.createFolders(foldersToCreate)
+
+    def filesForResponsive(self, features):
         hConst = c.Contants()
 
         mainFile = 'main.dart'
@@ -95,7 +132,7 @@ class hFolderStructure:
 
         pMainFile = f'{self.dParent}\{mainFile}'
         pHomeViewFile = f'{self.dParent}\{self.dFeatures}\{self.dHome}\{self.dViews}\{homeViewFile}'
-        pEnumFile = f'{self.dParent}\{self.dCommon}\{self.dEnum}\{enumFile}'
+        pEnumFile = f'{self.dParent}\{self.dCommon}\{self.dEnums}\{enumFile}'
         pResponsiveBuilder = f'{self.dParent}\{self.dResponsive}\{responsiveBuilder}'
         pSizingInformation = f'{self.dParent}\{self.dResponsive}\{sizingInformation}'
         pScreenTypeLayout = f'{self.dParent}\{self.dResponsive}\{screenTypeLayout}'
@@ -116,6 +153,30 @@ class hFolderStructure:
             pHomeDesktopViewFile: hConst.hRespHomeDesk,
         }
 
+        if (len(features) > 0):
+            for feature in features:
+                pFeatureMobViewFile = f'{self.dParent}\{self.dFeatures}\{feature}\{self.dViews}\{self.dLayouts}\{feature}_mobile_view.dart'
+                pFeatureTabViewFile = f'{self.dParent}\{self.dFeatures}\{feature}\{self.dViews}\{self.dLayouts}\{feature}_tab_view.dart'
+                pFeatureDesktopViewFile = f'{self.dParent}\{self.dFeatures}\{feature}\{self.dViews}\{self.dLayouts}\{feature}_desktop_view.dart'
+                pFeatureViewFile = f'{self.dParent}\{self.dFeatures}\{feature}\{self.dViews}\{feature}_view.dart'
+
+                mobViewContent = hConst.hRespHomeMob.replace(
+                    'Home', feature.capitalize())
+
+                tabViewContent = hConst.hRespHomeTab.replace(
+                    'Home', feature.capitalize())
+
+                desktopViewContent = hConst.hRespHomeDesk.replace(
+                    'Home', feature.capitalize())
+
+                viewContent = hConst.hResponsiveHomeContent.replace('home', feature).replace(
+                    'Home', feature.capitalize())
+
+                featureUpdate = {pFeatureMobViewFile: mobViewContent,
+                                 pFeatureTabViewFile: tabViewContent, pFeatureDesktopViewFile: desktopViewContent, pFeatureViewFile: viewContent}
+
+                filesToCreate.update(featureUpdate)
+
         hf.createFiles(filesToCreate)
 
 
@@ -127,17 +188,19 @@ class FolderStructues(hFolderStructure):
         super().__init__(projectName)
 
     def basicRiverpodProject(self):
-        super().folderStructureForRiverpod()
-        super().filesForRiverpod()
+        features = hf.askForFeaturesInProject()
+        super().folderStructureForRiverpod(features)
+        super().filesForRiverpod(features)
 
         hf.addFlutterPackage(
             f'{c.Packages().riverpodPackage}', f'.\{self.projectName}')
 
     def responsiveRiverpodProject(self):
-        super().folderStructureForRiverpod()
-        super().folderStructureForResponsive()
-        super().filesForRiverpod()
-        super().filesForResponsive()
+        features = hf.askForFeaturesInProject()
+        super().folderStructureForRiverpod(features)
+        super().folderStructureForResponsive(features)
+        super().filesForRiverpod(features)
+        super().filesForResponsive(features)
 
         hf.addFlutterPackage(
             f'{c.Packages().riverpodPackage}', f'.\{self.projectName}')

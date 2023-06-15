@@ -8,6 +8,34 @@ def getProjectName():
     return projectName
 
 
+def askForTypeOfProject():
+    print('Select the type of project:')
+    typeOfProject = int(input(
+        '1. Basic Riverpod structure project\n2. Responsive riverpod structure project\n'))
+
+    while typeOfProject not in range(1, 3):
+        typeOfProject = askForTypeOfProject()
+
+    return typeOfProject
+
+
+def askForFeaturesInProject():
+    featuresString = input(
+        'This project will be using feature first approach.\nEnter the features you want in your app:\nExample: auth, chat, call, products, home or type skip to skip this step\n')
+
+    if featuresString.lower() == 'skip':
+        return []
+    else:
+        featuresList = featuresString.split(',')
+        features = []
+
+        for feature in featuresList:
+            features.append(feature.strip())
+
+        features.remove('home')
+        return features
+
+
 def createFlutterProject(projectName):
     flutterPath = 'C:\\Users\\sachi\\Downloads\\flutter_windows_3.0.5-stable\\flutter\\bin\\flutter.bat'
     runTerminalCommand(f'{flutterPath} create {projectName}')

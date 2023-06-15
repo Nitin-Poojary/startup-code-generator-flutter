@@ -5,6 +5,12 @@ nameOfProject = hf.getProjectName()
 hf.createFlutterProject(nameOfProject)
 
 createStructures = hc.FolderStructues(nameOfProject)
-createStructures.responsiveRiverpodProject()
+
+projectType = hf.askForTypeOfProject()
+
+if projectType == 1:
+    createStructures.basicRiverpodProject()
+else:
+    createStructures.responsiveRiverpodProject()
 
 hf.flutterPubGet(nameOfProject)
