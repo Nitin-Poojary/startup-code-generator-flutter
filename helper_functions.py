@@ -8,6 +8,21 @@ def getProjectName():
     return projectName
 
 
+def getFlutterPath():
+    try:
+        with open('.\\flutterpath.txt', 'r') as f:
+            flutterPath = f.read()
+            return flutterPath
+    except FileNotFoundError:
+        flutterPath = input(
+            'Enter path to you flutter batch file flutter.bat in bin folder of your flutter:\n')
+
+        with open('.\\flutterpath.txt', 'w') as f:
+            f.write(flutterPath)
+
+        return flutterPath
+
+
 def askForTypeOfProject():
     print('Select the type of project:')
     typeOfProject = int(input(
@@ -32,23 +47,24 @@ def askForFeaturesInProject():
         for feature in featuresList:
             features.append(feature.strip())
 
-        features.remove('home')
+        if 'home' in features:
+            features.remove('home')
         return features
 
 
 def createFlutterProject(projectName):
-    flutterPath = 'C:\\Users\\sachi\\Downloads\\flutter_windows_3.0.5-stable\\flutter\\bin\\flutter.bat'
+    flutterPath = getFlutterPath()
     runTerminalCommand(f'{flutterPath} create {projectName}')
 
 
 def flutterPubGet(projectName):
-    flutterPath = 'C:\\Users\\sachi\\Downloads\\flutter_windows_3.0.5-stable\\flutter\\bin\\flutter.bat'
+    flutterPath = getFlutterPath()
     runTerminalCommand(f'{flutterPath} pub get',
                        directoryName=f'.\{projectName}')
 
 
 def addFlutterPackage(packageName, directoryName):
-    flutterPath = 'C:\\Users\\sachi\\Downloads\\flutter_windows_3.0.5-stable\\flutter\\bin\\flutter.bat'
+    flutterPath = getFlutterPath()
     runTerminalCommand(f'{flutterPath} pub add {packageName}',
                        directoryName=directoryName)
 
@@ -65,11 +81,11 @@ def runTerminalCommand(command, directoryName=''):
         print('some error occured during while executing some commands')
 
 
-def createFile(fileName, content):
+def createFile(filePath, content):
 
-    with open(fileName, 'w') as f:
+    with open(filePath, 'w') as f:
         f.write(content)
-        print(f"File {fileName} created successfully.")
+        print(f"File {filePath} created successfully.")
 
 
 def createFolders(folders):
