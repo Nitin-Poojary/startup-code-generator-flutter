@@ -33,13 +33,6 @@ class FolderStructues:
     def responsiveRiverpodProject(self):
         dEnums = 'enums'
         dResponsive = 'responsive'
-        dHome = 'home'
-
-        dParent = f'.\{projectName}\lib'
-
-        pEnums = os.path.join(dParent, dEnums)
-        pResponsive = os.path.join(dParent, dResponsive)
-        pHome = os.path.join(dParent, dHome)
 
         os.mkdir(pEnums)
         os.mkdir(pResponsive)
@@ -55,15 +48,9 @@ class FolderStructues:
         pRepository = f'{self.dParent}\{self.dFeatures}\{self.dHome}\{self.dRepository}'
         pView = f'{self.dParent}\{self.dFeatures}\{self.dHome}\{self.dViews}'
 
-        os.mkdir(pFeatures)
+        foldersToCreate = [pFeatures, pHome, pController, pRepository, pView]
 
-        if (hf.doesFolderExists(pFeatures)):
-            (os.mkdir(pHome))
-
-        if (hf.doesFolderExists(pHome)):
-            os.mkdir(pController)
-            os.mkdir(pRepository)
-            os.mkdir(pView)
+        hf.createFolders(foldersToCreate)
 
     def filesForRiverpod(self):
         hConst = c.Contants()
@@ -78,9 +65,12 @@ class FolderStructues:
         pHomeControllerFile = f'{self.dParent}\{self.dFeatures}\{self.dHome}\{self.dController}\{homeControllerFile}'
         pHomeRepoFile = f'{self.dParent}\{self.dFeatures}\{self.dHome}\{self.dRepository}\{homeRepoFile}'
 
-        hf.createFile(self.projectName, pMainFile, hConst.hMainContent.replace(
-            'projectName', self.projectName))
-        hf.createFile(self.projectName, pHomeViewFile, hConst.hHomeViewContent)
-        hf.createFile(self.projectName, pHomeControllerFile,
-                      hConst.hControllerContent)
-        hf.createFile(self.projectName, pHomeRepoFile, hConst.hRepoContent)
+        filesToCreate = {
+            pMainFile: hConst.hMainContent.replace(
+                'projectName', self.projectName),
+            pHomeViewFile: hConst.hHomeViewContent,
+            pHomeControllerFile: hConst.hControllerContent,
+            pHomeRepoFile: hConst.hRepoContent
+        }
+
+        hf.createFiles(filesToCreate)

@@ -37,11 +37,25 @@ def runTerminalCommand(command, directoryName=''):
         print('some error occured during while executing some commands')
 
 
-def createFile(projectName, fileName, content):
+def createFile(fileName, content):
 
     with open(fileName, 'w') as f:
         f.write(content)
         print(f"File {fileName} created successfully.")
+
+
+def createFolders(folders):
+    for i in range(len(folders)):
+        if i > 0:
+            if doesFolderExists(folders[i - 1]):
+                os.mkdir(folders[i])
+        else:
+            os.mkdir(folders[i])
+
+
+def createFiles(files):
+    for filePath in files:
+        createFile(filePath, files[filePath])
 
 
 def doesFolderExists(filePath):
