@@ -1,7 +1,8 @@
 class Contants:
 
     hMainContent = '''import 'package:flutter/material.dart';
-import 'package:projectName/features/home/views/home_view.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:portfolio/features/home/views/home_view.dart';
 
 void main() => runApp(const MyApp());
 
@@ -10,9 +11,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Material App',
-      home: HomeView(),
+    return const ProviderScope(
+      child: MaterialApp(
+        title: 'Material App',
+        home: HomeView(),
+      ),
     );
   }
 }
