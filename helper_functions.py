@@ -9,18 +9,10 @@ def getProjectName():
 
 
 def getFlutterPath():
-    try:
-        with open('.\\flutterpath.txt', 'r') as f:
-            flutterPath = f.read()
-            return flutterPath
-    except FileNotFoundError:
-        flutterPath = input(
-            'Enter path to you flutter batch file flutter.bat in bin folder of your flutter:\n')
+    userProfile = os.environ.get('USERPROFILE')
+    flutterPath = f'{userProfile}\\Downloads\\flutter_windows_3.0.5-stable\\flutter\\bin\\flutter.bat'
 
-        with open('.\\flutterpath.txt', 'w') as f:
-            f.write(flutterPath)
-
-        return flutterPath
+    return flutterPath
 
 
 def askForTypeOfProject():
